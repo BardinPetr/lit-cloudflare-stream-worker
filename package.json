@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "clear": "rm -rf ./dist",
-    "build": "esbuild --bundle --outdir=dist --out-extension:.js=.mjs --format=esm ./src/index.js",
+    "build": "esbuild --bundle --sourcemap --outdir=dist --out-extension:.js=.mjs --format=esm ./src/index.js",
     "dev": "yarn run clear && miniflare --watch --debug --kv VIDEO_AUTH_META",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",

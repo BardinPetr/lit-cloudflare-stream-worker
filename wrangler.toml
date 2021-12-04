@@ -17,3 +17,8 @@ command = "yarn && yarn run build"
 format = "modules"
 main = "index.mjs"
 
+# [secrets]
+# CF_STREAM_TOKEN
+# CF_STREAM_ACCOUNT
+# CF_EMAIL
+# CF_DOMAIN_ZONE
