@@ -1,1 +1,3 @@
-#Lit integration with Cloudflare Stream
+# Lit integration with Cloudflare Stream
+
+## API

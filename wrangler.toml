@@ -1,11 +1,19 @@
 name = "lit-cloudflare-stream-worker"
 type = "javascript"
-zone_id = ""
-account_id = ""
-route = ""
+account_id = "ad689a4c7ee776c5c881c7e04cad097b"
 workers_dev = true
+compatibility_date = "2021-12-04"
+
+kv_namespaces = [ 
+  { binding = "VIDEO_AUTH_META", id = "b8d6fc50d8734b0ea8a3eae70cb88a5f", preview_id = "b8d6fc50d8734b0ea8a3eae70cb88a5f" }
+]
+
+[env.production]
+zone_id = "bardin-petr.workers.dev"
 
 [build]
-command = "npm install && npm run build"
+command = "yarn && yarn run build"
 [build.upload]
-format = "service-worker"
+format = "modules"
+main = "index.mjs"
+
