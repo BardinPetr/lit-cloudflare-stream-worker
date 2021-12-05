@@ -105,3 +105,8 @@ export interface CFJWKResponse {
   jwk: string
   created: string
 }
+
+export interface CFDirectUploadResponse {
+  uploadURL: string
+  uid: string
+}

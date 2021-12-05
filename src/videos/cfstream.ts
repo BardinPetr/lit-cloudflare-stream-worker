@@ -1,5 +1,11 @@
 import generateCFStoken from '@/auth/streamToken'
-import { CFResponse, CFSAuthParams, CFVideoDetails, Optional } from './models'
+import {
+  CFDirectUploadResponse,
+  CFResponse,
+  CFSAuthParams,
+  CFVideoDetails,
+  Optional,
+} from './models'
 
 const baseUrl = 'https://api.cloudflare.com/client/v4'
 
@@ -24,6 +30,7 @@ async function call<T>(
   )
   const data = await res.json<CFResponse<T>>()
   if (data.success) return data.result
+  console.error('CFS error: ', data.errors)
   return null
 }
 
@@ -58,3 +65,21 @@ export const modifyMetadata = (
     uid: videoId,
     ...params,
   })
+
+export async function getUploadUrl(
+  auth: CFSAuthParams,
+  maxDuration = 21600,
+): Promise<string | null> {
+  const body: Record<string, unknown> = {
+    requireSignedURLs: true,
+    maxDurationSeconds: maxDuration,
+  }
+  const res = await call<CFDirectUploadResponse>(
+    auth,
+    'direct_upload',
+    'POST',
+    body,
+  )
+  if (res === null) return null
+  return res.uploadURL
+}

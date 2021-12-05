@@ -5,8 +5,10 @@ import getThumbnail from './actions/getThumbnail'
 import getToken from './actions/getToken'
 import listVideos from './actions/listVideos'
 import setupVideo from './actions/setupVideo'
+import uploadVideo from './actions/uploadVideo'
 
 export function registerRoutes(router: Router<Env>): void {
+  router.get('/upload', uploadVideo)
   router.get('/videos', listVideos)
   router.get('/thumb/:id', getThumbnail)
   router.get('/video/:id', getToken)

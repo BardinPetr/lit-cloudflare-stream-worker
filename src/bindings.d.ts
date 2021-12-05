@@ -5,4 +5,5 @@ export interface Env {
   CF_STREAM_PEM: string
   CF_STREAM_JWK: string
   CF_STREAM_KID: string
+  MAX_VIDEO_DURATION: string
 }
