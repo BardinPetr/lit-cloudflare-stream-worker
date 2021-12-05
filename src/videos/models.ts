@@ -75,10 +75,29 @@ export interface ShortVideoInfo {
   height: number
   width: number
   thumbnail: string
-  preview: string
   stream: string
   acc: AccessControlConditions
 }
+
+export const generateShortInfo = (
+  hostname: string,
+  videos: Array<CFVideoDetails>,
+): Array<ShortVideoInfo> =>
+  videos.map((v) => {
+    return {
+      id: v.uid,
+      height: v.input.height,
+      width: v.input.width,
+      name: (v.meta.name || '') as string,
+      thumbnail: v.requireSignedURLs
+        ? `${hostname}/thumb/${v.uid}`
+        : v.thumbnail,
+      stream: v.playback.hls || v.playback.dash || '',
+      acc: JSON.parse(
+        (v.meta.acc || '{}') as string,
+      ) as AccessControlConditions,
+    } as ShortVideoInfo
+  })
 
 export interface CFJWKResponse {
   id: string

@@ -1,4 +1,3 @@
-import { JWTContent } from '@/auth/models'
 import generateCFStoken from '@/auth/streamToken'
 import { getVideo } from '@/videos/cfstream'
 import { Context } from 'sunder'
@@ -17,7 +16,7 @@ export default async function (
     return
   }
   const v = await getVideo(ctx.params.id, ctx.data['cfauth'])
-  if (v === null) {
+  if (v === null || v.meta.acc === undefined) {
     ctx.response.status = 404
     return
   }

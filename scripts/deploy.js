@@ -18,20 +18,24 @@ config()
 const CF_ACCOUNT = process.env.CF_ACCOUNT_ID
 const CF_TOKEN = process.env.CF_API_TOKEN
 
-const callWrangler = (params) => {
-  const w = spawn('wrangler', params)
-  w.stdout.on('data', console.log)
-  w.stderr.on('data', console.error)
-}
+const callWrangler = (params) =>
+  new Promise((resolve, reject) => {
+    const w = spawn('wrangler', params)
+    w.stdout.on('data', (x) => console.log(x.toString('utf-8')))
+    w.stderr.on('data', (x) => console.log(x.toString('utf-8')))
+    w.on('close', resolve)
+  })
 
-const putWrangler = (echo, params) => {
-  const w = spawn(
-    `/usr/bin/sh -c "echo '${echo}' | wrangler ${params.join(' ')}"`,
-    { shell: true },
-  )
-  w.stdout.on('data', (x) => console.log(x.toString('utf-8')))
-  w.stderr.on('data', (x) => console.log(x.toString('utf-8')))
-}
+const putWrangler = (echo, params) =>
+  new Promise((resolve, reject) => {
+    const w = spawn(
+      `/usr/bin/sh -c "echo '${echo}' | wrangler ${params.join(' ')}"`,
+      { shell: true },
+    )
+    w.stdout.on('data', (x) => console.log(x.toString('utf-8')))
+    w.stderr.on('data', (x) => console.log(x.toString('utf-8')))
+    w.on('close', resolve)
+  })
 
 const generateStreamKeys = async () => {
   try {
@@ -55,9 +59,12 @@ const generateStreamKeys = async () => {
     console.log('Successfully got jwk + pem')
 
     const envUpd = `\nCF_STREAM_JWK=${jwk}\nCF_STREAM_PEM=${pem}\nCF_STREAM_KID=${kid}\n`
-    putWrangler(jwk, ['secret', 'put', 'CF_STREAM_JWK'])
-    putWrangler(pem, ['secret', 'put', 'CF_STREAM_PEM'])
-    putWrangler(kid, ['secret', 'put', 'CF_STREAM_KID'])
+
+    await Promise.all([
+      putWrangler(jwk, ['secret', 'put', 'CF_STREAM_JWK']),
+      putWrangler(pem, ['secret', 'put', 'CF_STREAM_PEM']),
+      putWrangler(kid, ['secret', 'put', 'CF_STREAM_KID']),
+    ])
 
     appendFileSync('.env', envUpd)
   } catch {
@@ -66,17 +73,19 @@ const generateStreamKeys = async () => {
 }
 
 async function main() {
-  putWrangler(CF_ACCOUNT, ['secret', 'put', 'CF_ACCOUNT_ID'])
-  putWrangler(CF_TOKEN, ['secret', 'put', 'CF_API_TOKEN'])
+  await Promise.all([
+    putWrangler(CF_ACCOUNT, ['secret', 'put', 'CF_ACCOUNT_ID']),
+    putWrangler(CF_TOKEN, ['secret', 'put', 'CF_API_TOKEN']),
+  ])
 
   if (
     process.env.CF_STREAM_KID === undefined ||
     process.env.CF_STREAM_JWK === undefined ||
     process.env.CF_STREAM_PEM === undefined
   )
-    generateStreamKeys()
+    await generateStreamKeys()
 
-  // callWrangler(['publish'])
+  await callWrangler(['publish'])
 }
 
 main()
