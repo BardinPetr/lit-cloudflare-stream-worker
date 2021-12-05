@@ -1,7 +1,7 @@
 import { Context, MiddlewareNextFunction } from 'sunder'
-import { verifyJwt } from './verify'
+import { verifyJwt } from '../auth/verify'
 
-export async function JWTAuthMiddleware(
+export default async function JWTAuthMiddleware(
   ctx: Context,
   next: MiddlewareNextFunction,
 ): Promise<void> {
@@ -13,7 +13,7 @@ export async function JWTAuthMiddleware(
       const verified = await verifyJwt(auth)
       if (
         verified === null ||
-        ctx.env.CF_STREAM_ACCOUNT !== verified.orgId ||
+        ctx.env.CF_ACCOUNT_ID !== verified.orgId ||
         ctx.url.hostname !== verified.baseUrl ||
         ctx.url.pathname !== verified.path
       ) {
@@ -26,16 +26,4 @@ export async function JWTAuthMiddleware(
     }
   }
   await next()
-}
-
-export async function catchMiddleware(
-  ctx: Context,
-  next: MiddlewareNextFunction,
-): Promise<void> {
-  try {
-    await next()
-  } catch (e) {
-    console.error(e)
-    ctx.response.status = 500
-  }
 }

@@ -1,7 +1,7 @@
 import { Router, Sunder } from 'sunder'
-import { JWTAuthMiddleware, catchMiddleware } from './auth/middleware'
 import { Env } from './bindings'
 import { registerRoutes } from './routes/routes'
+import { registerMiddlewares } from './middlewares'
 
 export function createApp(): Sunder<Env> {
   const app = new Sunder<Env>()
@@ -9,8 +9,7 @@ export function createApp(): Sunder<Env> {
 
   registerRoutes(router)
 
-  app.use(catchMiddleware)
-  app.use(JWTAuthMiddleware)
+  registerMiddlewares(app)
   app.use(router.middleware)
 
   return app

@@ -1,3 +1,13 @@
+import { AccessControlConditions } from '@/auth/models'
+
+export interface CFSAuthParams {
+  token: string
+  account: string
+  jwk?: string
+  pem?: string
+  kid?: string
+}
+
 export interface CFResponse<T> {
   success: boolean
   errors: Array<unknown>
@@ -31,7 +41,7 @@ export interface CFVideoDetails {
     errorReasonCode?: string
     errorReasonText?: string
   }
-  thumbnail?: string
+  thumbnail: string
   thumbnailTimestampPct?: number
   uid: string
   liveInput?: string
@@ -57,4 +67,22 @@ export interface CFVideoDetails {
 
 export type Optional<Type> = {
   [Property in keyof Type]+?: Type[Property]
+}
+
+export interface ShortVideoInfo {
+  id: string
+  name: string
+  height: number
+  width: number
+  thumbnail: string
+  preview: string
+  stream: string
+  acc: AccessControlConditions
+}
+
+export interface CFJWKResponse {
+  id: string
+  pem: string
+  jwk: string
+  created: string
 }

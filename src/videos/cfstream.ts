@@ -1,13 +1,9 @@
-import { Context } from 'sunder'
-import { CFResponse, CFVideoDetails, Optional } from './models'
+import { CFResponse, CFSAuthParams, CFVideoDetails, Optional } from './models'
 
 const baseUrl = 'https://api.cloudflare.com/client/v4'
 
 async function call<T>(
-  ctx: Context<{
-    CF_STREAM_ACCOUNT: string
-    CF_STREAM_TOKEN: string
-  }>,
+  auth: CFSAuthParams,
   path: string,
   method = 'GET',
   body = {},
@@ -15,13 +11,13 @@ async function call<T>(
   const params: RequestInit = {
     method,
     headers: {
-      Authorization: `Bearer ${ctx.env.CF_STREAM_TOKEN}`,
+      Authorization: `Bearer ${auth.token}`,
       'Content-Type': 'application/json',
     },
   }
   if (method != 'GET') params.body = JSON.stringify(body)
   const res = await fetch(
-    `${baseUrl}/accounts/${ctx.env.CF_STREAM_ACCOUNT}/stream/${path}`,
+    `${baseUrl}/accounts/${auth.account}/stream/${path}`,
     params,
   )
   const data = await res.json<CFResponse<T>>()
@@ -30,22 +26,16 @@ async function call<T>(
 }
 
 export const getVideo = (
-  ctx: Context<{
-    CF_STREAM_ACCOUNT: string
-    CF_STREAM_TOKEN: string
-  }>,
   videoId: string,
-): Promise<CFVideoDetails | null> => call<CFVideoDetails>(ctx, videoId)
+  auth: CFSAuthParams,
+): Promise<CFVideoDetails | null> => call<CFVideoDetails>(auth, videoId)
 
 export const modifyMetadata = (
-  ctx: Context<{
-    CF_STREAM_ACCOUNT: string
-    CF_STREAM_TOKEN: string
-  }>,
   videoId: string,
   params: Optional<CFVideoDetails>,
+  auth: CFSAuthParams,
 ): Promise<CFVideoDetails | null> =>
-  call<CFVideoDetails>(ctx, videoId, 'POST', {
+  call<CFVideoDetails>(auth, videoId, 'POST', {
     uid: videoId,
     ...params,
   })
