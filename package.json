@@ -7,6 +7,7 @@
   "scripts": {
     "clear": "rm -rf ./dist",
     "build": "esbuild --bundle --sourcemap --outdir=dist --out-extension:.js=.mjs --format=esm ./src/index.js",
+    "deploy": "node scripts/deploy.js",
     "dev": "yarn run clear && miniflare --watch --debug --kv VIDEO_AUTH_META",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
@@ -41,6 +42,8 @@
   },
   "dependencies": {
     "@noble/bls12-381": "^1.0.1",
+    "axios": "^0.24.0",
+    "dotenv": "^10.0.0",
     "lit-js-sdk": "^1.1.84",
     "sunder": "^0.10.0",
     "uint8arrays": "^3.0.0"

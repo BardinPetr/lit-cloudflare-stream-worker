@@ -18,7 +18,7 @@ format = "modules"
 main = "index.mjs"
 
 # [secrets]
-# CF_STREAM_TOKEN
-# CF_STREAM_ACCOUNT
-# CF_EMAIL
-# CF_DOMAIN_ZONE
+# CF_API_TOKEN
+# CF_ACCOUNT_ID
+# CF_STREAM_PEM
+# CF_STREAM_JWK
