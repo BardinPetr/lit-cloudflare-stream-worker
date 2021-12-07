@@ -19,6 +19,7 @@ config()
 const CF_ACCOUNT = process.env.CF_ACCOUNT_ID
 const CF_TOKEN = process.env.CF_API_TOKEN
 const MAX_VIDEO_DURATION = process.env.MAX_VIDEO_DURATION
+const REGISTER_SECRET = process.env.REGISTER_SECRET
 
 const callWrangler = (params) =>
   new Promise((resolve, reject) => {
@@ -79,6 +80,7 @@ async function main() {
     putWrangler(CF_ACCOUNT, ['secret', 'put', 'CF_ACCOUNT_ID']),
     putWrangler(CF_TOKEN, ['secret', 'put', 'CF_API_TOKEN']),
     putWrangler(MAX_VIDEO_DURATION, ['secret', 'put', 'MAX_VIDEO_DURATION']),
+    putWrangler(REGISTER_SECRET, ['secret', 'put', 'REGISTER_SECRET']),
   ])
 
   if (
@@ -88,7 +90,7 @@ async function main() {
   )
     await generateStreamKeys()
 
-  await callWrangler(['publish'])
+  // await callWrangler(['publish'])
 }
 
 main()

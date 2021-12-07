@@ -1,6 +1,7 @@
 import generateCFStoken from '@/auth/streamToken'
 import {
   CFDirectUploadResponse,
+  CFJWKResponse,
   CFResponse,
   CFSAuthParams,
   CFVideoDetails,
@@ -65,6 +66,19 @@ export const modifyMetadata = (
     uid: videoId,
     ...params,
   })
+
+export const getStreamKeys = (
+  account: string,
+  token: string,
+): Promise<CFJWKResponse | null> =>
+  call<CFJWKResponse>(
+    {
+      account,
+      token,
+    } as CFSAuthParams,
+    'keys',
+    'POST',
+  )
 
 export async function getUploadUrl(
   auth: CFSAuthParams,

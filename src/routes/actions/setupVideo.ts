@@ -7,7 +7,6 @@ export default async function (ctx: Context): Promise<void> {
     ctx.response.status = 403
     return
   }
-  // const token = ctx.data['jwt'] as JWTContent
   const request = await ctx.request.json<VideoSetupRequest>()
 
   const cur = await getVideo(request.id, ctx.data['cfauth'])

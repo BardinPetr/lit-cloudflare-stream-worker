@@ -10,10 +10,16 @@ export default async function JWTAuthMiddleware(
     let auth = ctx.request.headers.get('authorization')
     if (auth?.startsWith('Bearer ')) {
       auth = auth.split(' ')[1]
-      const verified = await verifyJwt(auth)
+      let verified
+      try {
+        verified = await verifyJwt(auth)
+      } catch {
+        await next()
+        return
+      }
       if (
         verified === null ||
-        ctx.env.CF_ACCOUNT_ID !== verified.orgId ||
+        ctx.data['cfauth'].account !== verified.orgId ||
         ctx.url.hostname !== verified.baseUrl ||
         ctx.url.pathname !== verified.path
       ) {

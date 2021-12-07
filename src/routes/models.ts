@@ -4,3 +4,8 @@ export interface VideoSetupRequest {
   id: string
   acc: AccessControlConditions
 }
+
+export interface RegisterRequest {
+  account: string
+  token: string
+}

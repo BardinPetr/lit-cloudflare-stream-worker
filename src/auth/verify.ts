@@ -10,29 +10,25 @@ export const NETWORK_PUB_KEY = fromString(
 )
 
 export async function verifyJwt(jwt: string): Promise<JWTContent | null> {
-  try {
-    const jwtParts = jwt.split('.')
-    const header = JSON.parse(toString(fromString(jwtParts[0], 'base64url')))
-    const payload = JSON.parse(
-      toString(fromString(jwtParts[1], 'base64url')),
-    ) as JWTContent
+  const jwtParts = jwt.split('.')
+  const header = JSON.parse(toString(fromString(jwtParts[0], 'base64url')))
+  const payload = JSON.parse(
+    toString(fromString(jwtParts[1], 'base64url')),
+  ) as JWTContent
 
-    if (
-      header.alg != 'BLS12-381' ||
-      header.typ != 'JWT' ||
-      payload.iss != 'LIT' ||
-      Date.now() > payload.exp * 1000
-    )
-      return null
-
-    const verified = await verify(
-      fromString(jwtParts[2], 'base64url'),
-      fromString(`${jwtParts[0]}.${jwtParts[1]}`),
-      NETWORK_PUB_KEY,
-    )
-    if (!verified) return null
-    return payload
-  } catch {
+  if (
+    header.alg != 'BLS12-381' ||
+    header.typ != 'JWT' ||
+    payload.iss != 'LIT' ||
+    Date.now() > payload.exp * 1000
+  )
     return null
-  }
+
+  const verified = await verify(
+    fromString(jwtParts[2], 'base64url'),
+    fromString(`${jwtParts[0]}.${jwtParts[1]}`),
+    NETWORK_PUB_KEY,
+  )
+  if (!verified) return null
+  return payload
 }

@@ -4,6 +4,7 @@ import getInfo from './actions/getInfo'
 import getThumbnail from './actions/getThumbnail'
 import getToken from './actions/getToken'
 import listVideos from './actions/listVideos'
+import registerAccount from './actions/registerAccount'
 import setupVideo from './actions/setupVideo'
 import uploadVideo from './actions/uploadVideo'
 
@@ -14,6 +15,7 @@ export function registerRoutes(router: Router<Env>): void {
   router.get('/video/:id', getToken)
   router.get('/info/:id', getInfo)
   router.post('/setup', setupVideo)
+  router.post('/register', registerAccount)
 
   router.get('/robots.txt', (ctx) => {
     ctx.response.body = `Agent: *\nDisallow: /`
