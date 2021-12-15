@@ -15,5 +15,9 @@ export default async function (
     ctx.response.body = v
     return
   }
-  ctx.response.body = generateShortInfo(ctx.url.origin, [v])[0]
+  ctx.response.body = generateShortInfo(
+    ctx.url.origin,
+    ctx.data['cfauth'].account,
+    [v],
+  )[0]
 }

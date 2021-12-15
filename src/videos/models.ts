@@ -8,6 +8,12 @@ export interface CFSAuthParams {
   kid?: string
 }
 
+export interface StoredAccountData {
+  auth: CFSAuthParams
+  accSetup: AccessControlConditions
+  accUpload: AccessControlConditions
+}
+
 export interface CFResponse<T> {
   success: boolean
   errors: Array<unknown>
@@ -81,6 +87,7 @@ export interface ShortVideoInfo {
 
 export const generateShortInfo = (
   hostname: string,
+  userId: string,
   videos: Array<CFVideoDetails>,
 ): Array<ShortVideoInfo> =>
   videos.map((v) => {
@@ -90,11 +97,11 @@ export const generateShortInfo = (
       width: v.input.width,
       name: (v.meta.name || '') as string,
       thumbnail: v.requireSignedURLs
-        ? `${hostname}/thumb/${v.uid}`
+        ? `${hostname}/thumb/${v.uid}?user_id=${userId}`
         : v.thumbnail,
       stream: v.playback.hls || v.playback.dash || '',
       acc: JSON.parse(
-        (v.meta.acc || '{}') as string,
+        (v.meta.acc || '[]') as string,
       ) as AccessControlConditions,
     } as ShortVideoInfo
   })

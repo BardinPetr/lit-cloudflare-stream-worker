@@ -8,5 +8,9 @@ export default async function (ctx: Context): Promise<void> {
     ctx.response.status = 404
     return
   }
-  ctx.response.body = generateShortInfo(ctx.url.origin, v)
+  ctx.response.body = generateShortInfo(
+    ctx.url.origin,
+    ctx.data['cfauth'].account,
+    v,
+  )
 }

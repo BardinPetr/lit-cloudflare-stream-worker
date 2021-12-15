@@ -1,27 +1,36 @@
-import { CFJWKResponse, CFSAuthParams } from '@/videos/models'
+import { AccessControlConditions } from '@/auth/models'
+import { RegisterRequest } from '@/routes/models'
+import {
+  CFJWKResponse,
+  CFSAuthParams,
+  StoredAccountData,
+} from '@/videos/models'
 
-export const setKeys = async (
+export const setAccountData = async (
   kv: KVNamespace,
-  account: string,
-  token: string,
+  data: RegisterRequest,
   keys: CFJWKResponse,
 ): Promise<void> =>
   await kv.put(
-    account,
+    data.account,
     JSON.stringify({
-      account,
-      token,
-      kid: keys.id,
-      jwk: keys.jwk,
-      pem: keys.pem,
-    } as CFSAuthParams),
+      auth: {
+        account: data.account,
+        token: data.token,
+        kid: keys.id,
+        jwk: keys.jwk,
+        pem: keys.pem,
+      },
+      accUpload: data.accUpload,
+      accSetup: data.accSetup,
+    } as StoredAccountData),
   )
 
-export async function getKeys(
+export async function getAccountData(
   kv: KVNamespace,
   account: string,
-): Promise<CFSAuthParams | null> {
+): Promise<StoredAccountData | null> {
   const res = await kv.get(account)
-  if (res !== null) return JSON.parse(res) as CFSAuthParams
+  if (res !== null) return JSON.parse(res) as StoredAccountData
   return null
 }

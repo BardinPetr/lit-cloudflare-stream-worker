@@ -8,4 +8,11 @@ export interface VideoSetupRequest {
 export interface RegisterRequest {
   account: string
   token: string
+  accSetup: AccessControlConditions
+  accUpload: AccessControlConditions
+}
+
+export interface ACCResponse {
+  accSetup: AccessControlConditions
+  accUpload: AccessControlConditions
 }

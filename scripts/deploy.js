@@ -90,7 +90,7 @@ async function main() {
   )
     await generateStreamKeys()
 
-  // await callWrangler(['publish'])
+  await callWrangler(['publish'])
 }
 
 main()

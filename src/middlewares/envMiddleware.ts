@@ -1,6 +1,7 @@
 import { CFSAuthParams } from '@/videos/models'
 import { Context, MiddlewareNextFunction } from 'sunder'
-import { getKeys } from './storage'
+import { getAccountData } from './storage'
+import { isUnauthedRoute } from '@/routes/routes'
 
 export default async function envMiddleware(
   ctx: Context<{
@@ -16,11 +17,17 @@ export default async function envMiddleware(
 ): Promise<void> {
   let auth: CFSAuthParams
 
-  if (
-    ctx.request.headers.has('CF_ACCOUNT') &&
-    ctx.env.REGISTER_SECRET !== 'disable'
-  ) {
-    const res = await getKeys(
+  if (ctx.url.searchParams.has('user_id'))
+    ctx.request.headers.set(
+      'CF_ACCOUNT',
+      ctx.url.searchParams.get('user_id') ?? '',
+    )
+
+  if (isUnauthedRoute(ctx.url)) {
+    await next()
+    return
+  } else if (ctx.request.headers.has('CF_ACCOUNT')) {
+    const res = await getAccountData(
       ctx.env.VIDEO_AUTH_META,
       ctx.request.headers.get('CF_ACCOUNT') ?? '',
     )
@@ -28,8 +35,8 @@ export default async function envMiddleware(
       ctx.response.status = 403
       return
     }
-    auth = res
-  } else {
+    auth = res.auth
+  } else if (ctx.env.REGISTER_SECRET === 'disable') {
     auth = {
       account: ctx.env.CF_ACCOUNT_ID,
       token: ctx.env.CF_API_TOKEN,
@@ -37,6 +44,9 @@ export default async function envMiddleware(
       pem: ctx.env.CF_STREAM_PEM,
       kid: ctx.env.CF_STREAM_KID,
     }
+  } else {
+    ctx.response.status = 403
+    return
   }
 
   ctx.data['cfauth'] = auth

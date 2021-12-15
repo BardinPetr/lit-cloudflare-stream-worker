@@ -1,3 +1,4 @@
+import { isUnauthedRoute } from '@/routes/routes'
 import { Context, MiddlewareNextFunction } from 'sunder'
 import { verifyJwt } from '../auth/verify'
 
@@ -6,7 +7,7 @@ export default async function JWTAuthMiddleware(
   next: MiddlewareNextFunction,
 ): Promise<void> {
   ctx.data['authorized'] = false
-  if (ctx.request.headers.has('authorization')) {
+  if (ctx.request.headers.has('authorization') && !isUnauthedRoute(ctx.url)) {
     let auth = ctx.request.headers.get('authorization')
     if (auth?.startsWith('Bearer ')) {
       auth = auth.split(' ')[1]

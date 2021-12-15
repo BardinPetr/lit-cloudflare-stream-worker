@@ -85,7 +85,7 @@ export async function getUploadUrl(
   maxDuration = 21600,
 ): Promise<string | null> {
   const body: Record<string, unknown> = {
-    requireSignedURLs: true,
+    // requireSignedURLs: true,
     maxDurationSeconds: maxDuration,
   }
   const res = await call<CFDirectUploadResponse>(

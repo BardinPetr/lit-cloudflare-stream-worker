@@ -10,7 +10,7 @@ export default async function (ctx: Context): Promise<void> {
   const request = await ctx.request.json<VideoSetupRequest>()
 
   const cur = await getVideo(request.id, ctx.data['cfauth'])
-  if (cur === null) {
+  if (cur === null || cur.meta.acc) {
     ctx.response.status = 404
     return
   }

@@ -1,4 +1,4 @@
-import { setKeys } from '@/middlewares/storage'
+import { setAccountData, getAccountData } from '@/middlewares/storage'
 import { getStreamKeys } from '@/videos/cfstream'
 import { Context } from 'sunder'
 import { RegisterRequest } from '../models'
@@ -16,6 +16,13 @@ export default async function (
     return
   }
   const request = await ctx.request.json<RegisterRequest>()
+
+  const data = await getAccountData(ctx.env.VIDEO_AUTH_META, request.account)
+  if (data !== null) {
+    ctx.response.status = 400
+    return
+  }
+
   const keys = await getStreamKeys(request.account, request.token)
 
   if (keys === null) {
@@ -23,7 +30,7 @@ export default async function (
     return
   }
 
-  await setKeys(ctx.env.VIDEO_AUTH_META, request.account, request.token, keys)
+  await setAccountData(ctx.env.VIDEO_AUTH_META, request, keys)
 
   ctx.response.status = 200
 }
