@@ -60,7 +60,7 @@ To watch video, the user should, as usual, get JWT from LIT and call `/video/:id
 ## Deployment
 
 ```shell
-git clone !!!!!!!
+git clone https://github.com/BardinPetr/lit-cloudflare-stream-worker
 yarn
 ```
 

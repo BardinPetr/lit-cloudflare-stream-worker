@@ -5,7 +5,7 @@ workers_dev = true
 compatibility_date = "2021-12-04"
 
 kv_namespaces = [ 
-  { binding = "VIDEO_AUTH_META", id = "b8d6fc50d8734b0ea8a3eae70cb88a5f", preview_id = "b8d6fc50d8734b0ea8a3eae70cb88a5f" }
+  { binding = "VIDEO_AUTH_META", id = "ed17f1b4fe4e4f149a3ef1d661d8e85e"}
 ]
 
 [env.production]

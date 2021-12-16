@@ -13,7 +13,7 @@
 import axios from 'axios'
 import { config } from 'dotenv'
 import { spawn } from 'child_process'
-import { appendFileSync } from 'fs'
+import { appendFileSync, readFileSync, writeFileSync } from 'fs'
 
 config()
 const CF_ACCOUNT = process.env.CF_ACCOUNT_ID
@@ -23,10 +23,15 @@ const REGISTER_SECRET = process.env.REGISTER_SECRET
 
 const callWrangler = (params) =>
   new Promise((resolve, reject) => {
+    var res = ''
     const w = spawn('wrangler', params)
-    w.stdout.on('data', (x) => console.log(x.toString('utf-8')))
+    w.stdout.on('data', (x) => {
+      x = x.toString('utf-8')
+      console.log(x)
+      res += x
+    })
     w.stderr.on('data', (x) => console.log(x.toString('utf-8')))
-    w.on('close', resolve)
+    w.on('close', () => resolve(res))
   })
 
 const putWrangler = (echo, params) =>
@@ -82,6 +87,21 @@ async function main() {
     putWrangler(MAX_VIDEO_DURATION, ['secret', 'put', 'MAX_VIDEO_DURATION']),
     putWrangler(REGISTER_SECRET, ['secret', 'put', 'REGISTER_SECRET']),
   ])
+
+  try {
+    let res = await callWrangler(['kv:namespace', 'create', 'VIDEO_AUTH_META'])
+    let kv_id = res.match(/([0-9a-f]{32})/gi)[0]
+    let wr = readFileSync('wrangler.toml')
+    writeFileSync(
+      'wrangler.toml',
+      wr
+        .toString()
+        .replace(
+          /VIDEO_AUTH_META\", id = \"(.*)\"}/i,
+          `VIDEO_AUTH_META\", id = \"${kv_id}\"}`,
+        ),
+    )
+  } catch (ex) {}
 
   if (
     process.env.CF_STREAM_KID === undefined ||

@@ -17,19 +17,18 @@ export default async function envMiddleware(
 ): Promise<void> {
   let auth: CFSAuthParams
 
-  if (ctx.url.searchParams.has('user_id'))
-    ctx.request.headers.set(
-      'CF_ACCOUNT',
-      ctx.url.searchParams.get('user_id') ?? '',
-    )
-
   if (isUnauthedRoute(ctx.url)) {
     await next()
     return
-  } else if (ctx.request.headers.has('CF_ACCOUNT')) {
+  } else if (
+    ctx.request.headers.has('CF_ACCOUNT') ||
+    ctx.url.searchParams.has('user_id')
+  ) {
     const res = await getAccountData(
       ctx.env.VIDEO_AUTH_META,
-      ctx.request.headers.get('CF_ACCOUNT') ?? '',
+      ctx.request.headers.get('CF_ACCOUNT') ??
+        ctx.url.searchParams.get('user_id') ??
+        '',
     )
     if (res === null) {
       ctx.response.status = 403
