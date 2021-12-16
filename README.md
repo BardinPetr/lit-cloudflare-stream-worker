@@ -3,7 +3,7 @@
 This is a CloudFlare Worker for using [LIT network](https://litprotocol.com/) as authentication layer for CloudFlare Stream service using JWT.  
 React client is located [here](https://github.com/BardinPetr/lit-cloudflare-stream-client). All steps described is `Idea` section is implemented in corresponding component.
 
-> Watch [demo](https://youtu.be/MYa6ne3MU7w). Or try it yourself [here](https://litcf.bardinpa.ru/). Register token is `yRJj169LRxiCpoE6Wduqz9UtYoKa4AKPRwUR90ASXgE4OZVHd7ZtpyEK5VTAZ5oe`. For main account all ACCs are set to non-zero eth balance.
+> Watch [demo](https://youtu.be/MYa6ne3MU7w). Or try it yourself [here](https://litcf.bardinpa.ru/). Register token is `yRJj169LRxiCpoE6Wduqz9UtYoKa4AKPRwUR90ASXgE4OZVHd7ZtpyEK5VTAZ5oe`. For main account all ACCs are set to balance >=0.1ETH.
 
 ### Key features
 
