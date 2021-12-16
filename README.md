@@ -97,7 +97,7 @@ yarn dev
 
 ### API
 
-> Also try [Postman collection]()
+> Also try [Postman collection](https://www.getpostman.com/collections/b748d3c777efbf842292)
 
 ### 1: `POST` `/register`
 
@@ -396,7 +396,43 @@ ShortVideoInfo:
 }
 ```
 
-### 6: `GET` `/thumb/:id`
+### 6: `GET` `/video/:id`
+
+#### Description
+
+I authentication successful, returns _signed URL_ for CFS video.
+
+#### Headers:
+
+```
+Authorization: Bearer ${LIT_JWT} // see required resource_id in 'idea' section
+CF_ACCOUNT: ${cloudflare_user_id}
+```
+
+#### Parameters:
+
+| Property | Type     | Description | Comment                 |
+| -------- | -------- | ----------- | ----------------------- |
+| id       | `string` | Video ID    | _replaces :id in path _ |
+
+##### Example:
+
+`https://example.com/video/668759882b3e437f9d6554c5a5e00189`
+
+#### Statuses:
+
+| Code | Description                |
+| ---- | -------------------------- |
+| 200  | OK                         |
+| 403  | Invalid JWT                |
+| 404  | Video not found            |
+| 500  | Interaction with CF failed |
+
+#### Response:
+
+`string` - JWT token for CF (_CFS's signed URL_)
+
+### 7: `GET` `/thumb/:id`
 
 #### Description
 
@@ -430,7 +466,7 @@ CF_ACCOUNT: ${cloudflare_user_id} // or use ?user_id=cloudflare_user_id
 
 Image file
 
-### 7: `GET` `/accs`
+### 8: `GET` `/accs`
 
 #### Description
 
