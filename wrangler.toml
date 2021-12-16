@@ -5,7 +5,7 @@ workers_dev = true
 compatibility_date = "2021-12-04"
 
 kv_namespaces = [ 
-  { binding = "VIDEO_AUTH_META", id = "ed17f1b4fe4e4f149a3ef1d661d8e85e"}
+  { binding = "VIDEO_AUTH_META", id = "15f3df2f4fdf4753940d495ef2fb4638"}
 ]
 
 [env.production]

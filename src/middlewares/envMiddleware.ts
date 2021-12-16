@@ -31,6 +31,7 @@ export default async function envMiddleware(
         '',
     )
     if (res === null) {
+      console.warn(`Failed with 403 due to invalid account`)
       ctx.response.status = 403
       return
     }
